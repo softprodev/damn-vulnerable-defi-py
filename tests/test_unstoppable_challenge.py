@@ -1,11 +1,11 @@
 from brownie import (
+    accounts,
     exceptions,
     UnstoppableLender,
     DamnValuableToken,
     ReceiverUnstoppable,
 )
 from web3 import Web3
-from scripts.utils import get_account
 import pytest
 
 TOKENS_IN_POOL = Web3.toWei("1000000", "ether")
@@ -14,9 +14,9 @@ INITIAL_ATTACKER_BALANCE = Web3.toWei("100", "ether")
 
 def before():
     # set up contracts
-    deployer = get_account(0)
-    attacker = get_account(1)
-    randomUser = get_account(2)
+    deployer = accounts(0)
+    attacker = accounts(1)
+    randomUser = accounts(2)
     dvt_token = DamnValuableToken.deploy({"from": deployer})
     lender = UnstoppableLender.deploy(dvt_token.address, {"from": deployer})
 
@@ -41,7 +41,7 @@ def run_exploit():
 
 
 def after():
-    randomUser = get_account(2)
+    randomUser = accounts(2)
     # Confirm other users cannot execute flash loans
     with pytest.raises(exceptions.VirtualMachineError):
         ReceiverUnstoppable[0].executeFlashLoan(10, {"from": randomUser})
