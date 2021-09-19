@@ -42,6 +42,7 @@ def run_exploit():
 
 def after():
     randomUser = get_account(2)
+    # Confirm other users cannot execute flash loans
     with pytest.raises(exceptions.VirtualMachineError):
         ReceiverUnstoppable[0].executeFlashLoan(10, {"from": randomUser})
 
