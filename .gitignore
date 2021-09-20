@@ -5,4 +5,5 @@ __pycache__
 build/
 reports/
 node_modules/
+solutions/
 package-lock.json

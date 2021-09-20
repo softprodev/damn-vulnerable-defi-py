@@ -1,16 +1,19 @@
-from brownie import accounts, exceptions, NaiveReceiverLenderPool, FlashLoanReceiver
+from brownie import (
+    accounts,
+    NaiveReceiverLenderPool,
+    FlashLoanReceiver,
+)
 from web3 import Web3
 
-# import pytest
-
+# Pool has 1000 ETH in balance
 ETHER_IN_POOL = Web3.toWei("1000", "ether")
+# Receiver has 10 ETH in balance
 ETHER_IN_RECEIVER = Web3.toWei("10", "ether")
 
 
 def before():
-    # set up contracts
+    # Setup scenario
     deployer = accounts[0]
-    # attacker = accounts[1]
     random_user = accounts[2]
 
     lender_pool = NaiveReceiverLenderPool.deploy({"from": deployer})
@@ -19,6 +22,7 @@ def before():
     assert lender_pool.balance() == ETHER_IN_POOL
     assert lender_pool.fixedFee({"from": deployer}) == Web3.toWei("1", "ether")
 
+    # random_user deploying their flash load receiver
     vulnerable_receiver = FlashLoanReceiver.deploy(
         lender_pool.address, {"from": random_user}
     )
@@ -28,16 +32,17 @@ def before():
 
 def run_exploit():
     # remove pass and add exploit code here
+    # attacker = accounts[1] - account to be used for exploit
     pass
 
 
 def after():
-    randomUser = accounts[2]
-    assert randomUser.balance() == 0
+    # Confirm all ETH has been drained from receiver
+    assert FlashLoanReceiver[0].balance() == 0
     assert NaiveReceiverLenderPool[0].balance() == (ETHER_IN_POOL + ETHER_IN_RECEIVER)
 
 
-def test_naive_receiver():
+def test_naive_receiver_challenge():
     before()
     run_exploit()
     after()
