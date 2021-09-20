@@ -14,6 +14,7 @@ ATTACKER_INITAL_TOKEN_BALANCE = Web3.toWei("100", "ether")
 def before():
     # setup scenario
     # HOW TO LOAD IN UNISWAP CONTRACTS?
+    pass
 
 
 def run_exploit():
@@ -23,7 +24,7 @@ def run_exploit():
 
 
 def after():
-
+    pass
 
 
 def test_puppet_challenge():
