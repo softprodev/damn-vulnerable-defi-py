@@ -3,6 +3,7 @@ from brownie import (
     Contract,
 )
 from web3 import Web3
+import json
 
 # Uniswap exchange will start with 10 DVT and 10 ETH in liquidity
 UNISWAP_INITIAL_TOKEN_RESERVE = Web3.toWei("10", "ether")
@@ -14,7 +15,13 @@ ATTACKER_INITAL_TOKEN_BALANCE = Web3.toWei("100", "ether")
 def before():
     # setup scenario
     # HOW TO LOAD IN UNISWAP CONTRACTS?
-    pass
+    with open("build-uniswap-v1/UniswapV1Exchange.json", "r") as ex:
+        data = json.load(ex)
+
+    # get bytecode
+    bytecode = data["bytecode"]
+    # get abi
+    abi = data["abi"]
 
 
 def run_exploit():

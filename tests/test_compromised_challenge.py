@@ -33,13 +33,13 @@ def before():
         [INITIAL_NFT_PRICE, INITIAL_NFT_PRICE, INITIAL_NFT_PRICE],
         {"from": deployer},
     ).oracle()
-    oracle = Contract.from_abi("TrustfulOracle", oracle_address, TrustfulOracle.abi)
+    oracle = TrustfulOracle.at(oracle_address)
 
     # Deploy the exchange and get the associated ERC721 token
     exchange = Exchange.deploy(
         oracle.address, {"from": deployer, "value": EXCHANGE_INITIAL_ETH_BALANCE}
     )
-    token = Contract.from_abi("DamnValuableNFT", exchange.token(), DamnValuableNFT.abi)
+    token = DamnValuableNFT.at(exchange.token())
 
     global initial_attacker_balance
     initial_attacker_balance = attacker.balance()

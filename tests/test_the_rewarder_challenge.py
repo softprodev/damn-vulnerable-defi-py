@@ -36,12 +36,8 @@ def before():
 
     rewarder_pool = TheRewarderPool.deploy(liquidity_token.address, {"from": deployer})
     global reward_token
-    reward_token = Contract.from_abi(
-        "RewardToken", rewarder_pool.rewardToken(), RewardToken.abi
-    )
-    accounting_token = Contract.from_abi(
-        "AccountingToken", rewarder_pool.accToken(), AccountingToken.abi
-    )
+    reward_token = RewardToken.at(rewarder_pool.rewardToken())
+    accounting_token = AccountingToken.at(rewarder_pool.accToken())
 
     # Alice, Bob, Charlie, and David deposit 100 tokens each
     amount = Web3.toWei("100", "ether")
