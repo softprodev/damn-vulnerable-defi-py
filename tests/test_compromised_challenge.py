@@ -22,9 +22,9 @@ def before():
     # setup scenario
     deployer = accounts[0]
     attacker = accounts[1]
-    deployer.transfer("", Web3.toWei("5", "ether"))
-    deployer.transfer("", Web3.toWei("5", "ether"))
-    deployer.transfer("", Web3.toWei("5", "ether"))
+    deployer.transfer(sources[0], Web3.toWei("5", "ether"))
+    deployer.transfer(sources[1], Web3.toWei("5", "ether"))
+    deployer.transfer(sources[2], Web3.toWei("5", "ether"))
 
     # Deploy the oracle and setup the trusted sources with initial prices
     oracle_address = TrustfulOracleInitializer.deploy(

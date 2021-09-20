@@ -11,7 +11,7 @@ from web3 import Web3
 
 TOKENS_IN_LENDER_POOL = Web3.toWei("1000000", "ether")
 
-users = None
+users = []
 
 
 def before():
