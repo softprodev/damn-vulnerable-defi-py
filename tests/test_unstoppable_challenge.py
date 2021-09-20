@@ -37,6 +37,7 @@ def before():
 
 def run_exploit():
     # remove pass and add exploit code here
+    # attacker = accounts[1] - account to be used for exploit
     pass
 
 
