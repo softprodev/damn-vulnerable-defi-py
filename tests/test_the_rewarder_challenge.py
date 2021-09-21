@@ -1,6 +1,5 @@
 from brownie import (
     accounts,
-    Contract,
     DamnValuableToken,
     FlashLoanerPool,
     TheRewarderPool,
@@ -9,7 +8,6 @@ from brownie import (
 )
 from brownie.network.state import Chain
 from web3 import Web3
-import datetime
 
 TOKENS_IN_LENDER_POOL = Web3.toWei("1000000", "ether")
 

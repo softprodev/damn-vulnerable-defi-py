@@ -1,6 +1,5 @@
 from brownie import (
     accounts,
-    Contract,
     DamnValuableNFT,
     Exchange,
     TrustfulOracle,
