@@ -7,7 +7,9 @@ from brownie import (
     AccountingToken,
     RewardToken,
 )
+from brownie.network.state import Chain
 from web3 import Web3
+import datetime
 
 TOKENS_IN_LENDER_POOL = Web3.toWei("1000000", "ether")
 
@@ -50,14 +52,13 @@ def before():
     assert accounting_token.totalSupply() == Web3.toWei("400", "ether")
     assert reward_token.totalSupply() == 0
 
-    # advance time?
-    ##
-    ## TODO
-    ##
+    # Advance chain time by 432001 seconds (5 days and 1 second)
+    chain = Chain()
+    chain.sleep(432001)
 
     for user in users:
         rewarder_pool.distributeRewards({"from": user})
-        assert reward_token.balanceOf(user.address) == 25
+        assert reward_token.balanceOf(user.address) == Web3.toWei("25", "ether")
 
     assert reward_token.totalSupply() == Web3.toWei("100", "ether")
     assert TheRewarderPool[0].roundNumber() == 2
