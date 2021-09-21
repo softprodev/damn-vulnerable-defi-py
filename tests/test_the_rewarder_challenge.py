@@ -75,10 +75,10 @@ def after():
     # Users should not get more rewards this round
     for user in users:
         TheRewarderPool[0].distributeRewards({"from": user})
-        assert reward_token.balanceOf(user.address) == 25
+        assert reward_token.balanceOf(user.address) == Web3.toWei("25", "ether")
 
     # Rewards must have been issued to the attacker account
-    assert reward_token.totalSupply() == Web3.toWei("100", "ether")
+    assert reward_token.totalSupply() > Web3.toWei("100", "ether")
     assert reward_token.balanceOf(attacker) > 0
 
 
