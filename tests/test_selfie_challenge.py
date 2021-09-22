@@ -1,4 +1,9 @@
-from brownie import accounts, DamnValuableTokenSnapshot, SelfiePool, SimpleGovernance
+from brownie import (
+    accounts,
+    DamnValuableTokenSnapshot,
+    SelfiePool,
+    SimpleGovernance,
+)
 from web3 import Web3
 
 TOKEN_INITIAL_SUPPLY = Web3.toWei("2000000", "ether")
@@ -12,7 +17,7 @@ def before():
         TOKEN_INITIAL_SUPPLY, {"from": deployer}
     )
 
-    governance = SimpleGovernance.deploy(dvt_token.addres, {"from": deployer})
+    governance = SimpleGovernance.deploy(dvt_token.address, {"from": deployer})
     pool = SelfiePool.deploy(dvt_token.address, governance.address, {"from": deployer})
 
     dvt_token.transfer(pool.address, TOKENS_IN_POOL, {"from": deployer})
