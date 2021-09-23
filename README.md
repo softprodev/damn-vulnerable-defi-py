@@ -1,7 +1,7 @@
 This repo contains the challenges from https://www.damnvulnerabledefi.xyz/index.html ported to Python/Brownie.
 
-It is still a work in progress!
+All challenges have now been ported.
 
-- One challenges is incomplete
-    - Puppet challenge
-        - Need to find a way to load in the JSON abi from contracts in build-uniswap-v1 folder.
+Should just work out the box. Choose your challenge in the test folder and fill in run_exploit().
+
+Command to run your test (using test_unstoppable_challenge.py) - brownie test -k test_unstoppable_challenge
