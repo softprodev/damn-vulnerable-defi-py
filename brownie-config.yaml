@@ -1,5 +1,3 @@
-dotenv: .env
-
 dependencies:
   # - <organisation/repo>@<version>
   - OpenZeppelin/openzeppelin-contracts@3.4.2
