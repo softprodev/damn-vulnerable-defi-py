@@ -45,7 +45,7 @@ def after():
     randomUser = accounts[2]
     # Confirm other users now cannot execute flash loans
     with pytest.raises(exceptions.VirtualMachineError):
-        ReceiverUnstoppable[0].executeFlashLoan(10, {"from": randomUser})
+        ReceiverUnstoppable[-1].executeFlashLoan(10, {"from": randomUser})
 
 
 def test_unstoppable_challenge():

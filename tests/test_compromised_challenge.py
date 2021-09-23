@@ -9,6 +9,7 @@ from web3 import Web3
 
 EXCHANGE_INITIAL_ETH_BALANCE = Web3.toWei("10000", "ether")
 INITIAL_NFT_PRICE = Web3.toWei("999", "ether")
+FIVE_ETH = Web3.toWei("5", "ether")
 
 sources = [
     "0xA73209FB1a42495120166736362A1DfA9F95A105",
@@ -21,11 +22,13 @@ def before():
     # setup scenario
     deployer = accounts[0]
     attacker = accounts[1]
-    deployer.transfer(sources[0], Web3.toWei("5", "ether"))
-    deployer.transfer(sources[1], Web3.toWei("5", "ether"))
-    deployer.transfer(sources[2], Web3.toWei("5", "ether"))
 
-    # Deploy the oracle and setup the trusted sources with initial prices
+    # fund the trusted source addresses
+    deployer.transfer(sources[0], FIVE_ETH)
+    deployer.transfer(sources[1], FIVE_ETH)
+    deployer.transfer(sources[2], FIVE_ETH)
+
+    # deploy the oracle and setup the trusted sources with initial prices
     oracle_address = TrustfulOracleInitializer.deploy(
         sources,
         ["DVNFT", "DVNFT", "DVNFT"],
@@ -34,7 +37,7 @@ def before():
     ).oracle()
     oracle = TrustfulOracle.at(oracle_address)
 
-    # Deploy the exchange and get the associated ERC721 token
+    # deploy the exchange and get the associated ERC721 token
     exchange = Exchange.deploy(
         oracle.address, {"from": deployer, "value": EXCHANGE_INITIAL_ETH_BALANCE}
     )
@@ -52,7 +55,7 @@ def run_exploit():
 
 def after():
     # Confirm exchange lost all ETH
-    assert Exchange[0].balance() == 0
+    assert Exchange[-1].balance() == 0
 
 
 def test_compromised_challenge():

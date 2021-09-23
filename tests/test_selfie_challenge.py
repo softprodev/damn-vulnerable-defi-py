@@ -31,10 +31,10 @@ def run_exploit():
 
 
 def after():
-    # Confirm attacker has tokens from pool
+    # confirm attacker has tokens from pool
     attacker = accounts[1]
-    assert DamnValuableTokenSnapshot[0].balanceOf(attacker.address) == TOKENS_IN_POOL
-    assert DamnValuableTokenSnapshot[0].balanceOf(SelfiePool[0].address) == 0
+    assert DamnValuableTokenSnapshot[-1].balanceOf(attacker.address) == TOKENS_IN_POOL
+    assert DamnValuableTokenSnapshot[-1].balanceOf(SelfiePool[0].address) == 0
 
 
 def test_selfie_challenge():

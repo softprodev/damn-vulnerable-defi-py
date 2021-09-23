@@ -5,8 +5,6 @@ from brownie import (
     PuppetPool,
 )
 from brownie.network.state import Chain
-from brownie.network.contract import ContractTx
-from brownie.convert.datatypes import Wei
 from decimal import *
 from web3 import Web3
 import json
@@ -26,24 +24,21 @@ def before():
     attacker = accounts[1]
     token = DamnValuableToken.deploy({"from": deployer})
 
-    exchange_template, abi = deploy_uniswap_contract("UniswapV1Exchange")
-    (factory, abi2) = deploy_uniswap_contract("UniswapV1Factory")
+    exchange_template = deploy_uniswap_contract("UniswapV1Exchange")
+    factory = deploy_uniswap_contract("UniswapV1Factory")
 
     factory.initializeFactory(exchange_template.address, {"from": deployer})
-
     exchange_address = factory.createExchange(token.address, {"from": deployer})
-    print(
-        "DVT Token Exchange deployed at "
-        + exchange_address.events["NewExchange"]["exchange"]
-    )
+
     dvt_uniswap_exchange = Contract(
-        "DVTUniswapExchange", exchange_address.events["NewExchange"]["exchange"], abi
+        "DVTUniswapExchange",
+        exchange_address.events["NewExchange"]["exchange"],
+        exchange_template.abi,
     )
 
     lending_pool = PuppetPool.deploy(
         token.address, dvt_uniswap_exchange.address, {"from": deployer}
     )
-    print("Lending pool deployed at " + lending_pool.address)
     token.approve(
         dvt_uniswap_exchange.address, UNISWAP_INITIAL_TOKEN_RESERVE, {"from": deployer}
     )
@@ -58,18 +53,7 @@ def before():
         {"from": deployer, "value": UNISWAP_INITIAL_ETH_RESERVE},
     )
 
-    print(
-        type(
-            calculate_token_to_eth_input_price(
-                ONE_ETH_IN_WEI,
-                UNISWAP_INITIAL_TOKEN_RESERVE,
-                UNISWAP_INITIAL_ETH_RESERVE,
-            )
-        )
-    )
-
-    print(type(dvt_uniswap_exchange.getTokenToEthInputPrice(ONE_ETH_IN_WEI)))
-    # Ensure Uniswap exchange is working as expected
+    # ensure Uniswap exchange is working as expected
     assert dvt_uniswap_exchange.getTokenToEthInputPrice(
         ONE_ETH_IN_WEI
     ) == calculate_token_to_eth_input_price(
@@ -92,14 +76,13 @@ def calculate_token_to_eth_input_price(
 ):
     return (
         Decimal(tokens_sold)
-        * 9970
+        * 997
         * ether_in_reserve
-        / (tokens_in_reserve * 10000 + tokens_sold * 9970)
+        / (tokens_in_reserve * 1000 + tokens_sold * 997)
     )
 
 
 def deploy_uniswap_contract(file_name):
-    print("deploying " + file_name + " contract")
     with open("build-uniswap-v1\\" + file_name + ".json") as json_file:
         data = json.load(json_file)
         abi = data["abi"]
@@ -107,8 +90,7 @@ def deploy_uniswap_contract(file_name):
 
     # deploys contract
     tx = accounts[0].transfer(data=bytecode)
-    print("deployed at " + tx.contract_address)
-    return Contract.from_abi(file_name, tx.contract_address, abi), abi
+    return Contract.from_abi(file_name, tx.contract_address, abi)
 
 
 def run_exploit():
@@ -122,7 +104,7 @@ def after():
     assert (
         DamnValuableToken[0].balanceOf(attacker.address) >= POOL_INITIAL_TOKEN_BALANCE
     )
-    assert DamnValuableToken[0].balanceOf(PuppetPool[0].address) == 0
+    assert DamnValuableToken[-1].balanceOf(PuppetPool[-1].address) == 0
     assert attacker.balance() >= initial_attacker_eth_balance
 
 

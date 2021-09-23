@@ -12,7 +12,7 @@ ETHER_IN_RECEIVER = Web3.toWei("10", "ether")
 
 
 def before():
-    # Setup scenario
+    # setup scenario
     deployer = accounts[0]
     random_user = accounts[2]
 
@@ -38,8 +38,8 @@ def run_exploit():
 
 def after():
     # Confirm all ETH has been drained from receiver
-    assert FlashLoanReceiver[0].balance() == 0
-    assert NaiveReceiverLenderPool[0].balance() == (ETHER_IN_POOL + ETHER_IN_RECEIVER)
+    assert FlashLoanReceiver[-1].balance() == 0
+    assert NaiveReceiverLenderPool[-1].balance() == (ETHER_IN_POOL + ETHER_IN_RECEIVER)
 
 
 def test_naive_receiver_challenge():

@@ -25,7 +25,7 @@ def run_exploit():
 
 def after():
     attacker = accounts[1]
-    assert SideEntranceLenderPool[0].balance() == 0
+    assert SideEntranceLenderPool[-1].balance() == 0
     # Not checking exactly how much is the final balance of the attacker,
     # because it'll depend on how much gas the attacker spends in the attack
     # If there were no gas costs, it would be balance before attack + ETHER_IN_POOL

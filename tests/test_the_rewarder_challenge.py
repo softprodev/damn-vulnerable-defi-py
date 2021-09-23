@@ -29,13 +29,12 @@ def before():
         liquidity_token.address, {"from": deployer}
     )
 
-    # Set initial token balance of the pool offering flash loans
+    # set initial token balance of the pool offering flash loans
     liquidity_token.transfer(
         flash_loan_pool.address, TOKENS_IN_LENDER_POOL, {"from": deployer}
     )
 
     rewarder_pool = TheRewarderPool.deploy(liquidity_token.address, {"from": deployer})
-    global reward_token
     reward_token = RewardToken.at(rewarder_pool.rewardToken())
     accounting_token = AccountingToken.at(rewarder_pool.accToken())
 
@@ -50,7 +49,7 @@ def before():
     assert accounting_token.totalSupply() == Web3.toWei("400", "ether")
     assert reward_token.totalSupply() == 0
 
-    # Advance chain time by 432001 seconds (5 days and 1 second)
+    # advance chain time by 432001 seconds (5 days and 1 second)
     chain = Chain()
     chain.sleep(432001)
 
@@ -70,14 +69,15 @@ def run_exploit():
 
 def after():
     attacker = accounts[5]
-
-    assert TheRewarderPool[0].roundNumber() == 3
-    # Users should not get more rewards this round
+    reward_token = RewardToken[-1]
+    rewarder_pool = TheRewarderPool[-1]
+    assert rewarder_pool.roundNumber() == 3
+    #  users should not get more rewards this round
     for user in users:
-        TheRewarderPool[0].distributeRewards({"from": user})
+        rewarder_pool.distributeRewards({"from": user})
         assert reward_token.balanceOf(user.address) == Web3.toWei("25", "ether")
 
-    # Rewards must have been issued to the attacker account
+    # rewards must have been issued to the attacker account
     assert reward_token.totalSupply() > Web3.toWei("100", "ether")
     assert reward_token.balanceOf(attacker) > 0
 

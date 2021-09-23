@@ -25,8 +25,8 @@ def run_exploit():
 def after():
     # Confirm attacker has tokens from pool
     attacker = accounts[1]
-    assert DamnValuableToken[0].balanceOf(TrusterLenderPool[0].address) == 0
-    assert DamnValuableToken[0].balanceOf(attacker.address) == TOKENS_IN_POOL
+    assert DamnValuableToken[-1].balanceOf(TrusterLenderPool[0].address) == 0
+    assert DamnValuableToken[-1].balanceOf(attacker.address) == TOKENS_IN_POOL
 
 
 def test_truster_challenge():
